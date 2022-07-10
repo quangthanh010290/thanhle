@@ -83,7 +83,7 @@ search:
 
 # Enable or disable heading anchors
 heading_anchors: true
-
+theme: just-the-docs
 # Aux links for the upper right navigation
 aux_links:
   "Just the Docs on GitHub":
@@ -129,6 +129,7 @@ ga_tracking_anonymize_ip: true # Use GDPR compliant Google Analytics settings (t
 
 plugins:
   - jekyll-seo-tag
+  - jekyll-feed
 
 kramdown:
   syntax_highlighter_opts:
