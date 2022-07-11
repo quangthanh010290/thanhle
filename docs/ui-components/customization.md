@@ -1,6 +1,7 @@
 ---
 layout: default
 title: Customization
+parent: UI Components
 nav_order: 6
 ---
 

@@ -1,6 +1,7 @@
 ---
 layout: default
 title: Configuration
+parent: UI Components
 nav_order: 2
 ---
 
@@ -135,7 +136,7 @@ jtd.addEvent(toggleDarkMode, 'click', function(){
 });
 </script>
 
-See [Customization]({{ site.baseurl }}{% link docs/customization.md %}) for more information.
+See [Customization]({{ site.baseurl }}{% link docs/ui-components/customization.md %}) for more information.
 
 ## Google Analytics
 
