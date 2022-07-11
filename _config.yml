@@ -38,7 +38,7 @@ search:
 
 heading_anchors: true
 
-theme: just-the-docs
+theme: jekyll-theme-cayman
 
 plugins:
   - jekyll-feed
