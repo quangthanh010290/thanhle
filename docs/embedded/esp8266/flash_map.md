@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Esp8266 Flash Map
+title: Partition Tables
 parent: Esp8266
 grand_parent: Embedded
 nav_order: 1
@@ -33,7 +33,7 @@ SoC ESP8266EX được tích hợp memory controller, static ram (SRAM) và ROM.
 
 Tuy nhiên với SDK hiện tại, static RAM cấp cho user space được cấu hình như sau:
 - Khi ESP8266 có chạy WiFi Station mode và kết nối đến AccessPoint thì tổng bộ nhớ tối đa bao gồm Heap và Data cho user là <span style="color:red">xấp xỉ 50 kB</span>, cần lưu ý tối ưu space khi làm app.
-- ESP8266 có ROM, nhưng không phải ROM có thể  ghi xóa, do đó cần gắn bộ nhớ ngoài để chứa mã ứng dụng, SoC ESP 8266 hỗ trợ SPI Flash (External flash). <span style="color:red">Các ứng dụng cần bảo mật cao cần lưu ý, hacker có thể đọc/ghi/thay thế chip flask này.</span>
+- ESP8266 có ROM, nhưng không phải ROM <span style="color:blue">có thể  ghi xóa</span>, cần gắn bộ nhớ ngoài để chứa mã ứng dụng, SoC ESP 8266 hỗ trợ SPI Flash (External flash). <span style="color:red">Các ứng dụng cần bảo mật cao cần lưu ý, hacker có thể đọc/ghi/thay thế chip flask này.</span>
 
 ### External flash
 
@@ -61,7 +61,6 @@ Espressif sử dụng bảng phân vùng (partition tables) để thiết lập 
 | phy_init | data | phy     | 0xf000   | 4K   | none  |
 | ota_0    | app  | ota_0   | 0x10000  | 960K | none  |
 | ota_1    | app  | ota_1   | 0x110000 | 960K | none  |
-
 
 
 # Built-in Partition tables
