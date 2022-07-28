@@ -127,4 +127,4 @@ Bài viết này giới thiệu tổ chức lưu trữ dữ liệu trên externa
 
 Trong các bài viết tiếp theo mình sẽ giới thiệu các trường hơp sử dụng partition table này, cách build partition table và ghi vào bộ nhớ flash.
 
-Chúng ta củng có thể tạo custom partition table, ví dụ như tạo thêm partition có định dạng file system để dễ  dàng lưu trữ các file giống như các ứng dụng trên các OS cao cấp.
+Chúng ta cũng có thể tạo custom partition table, ví dụ như tạo thêm partition có định dạng file system để dễ  dàng lưu trữ các file giống như các ứng dụng trên các OS cao cấp.

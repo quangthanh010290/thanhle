@@ -6,7 +6,8 @@ grand_parent: Embedded
 nav_order: 2
 ---
 
-# Giới thiệu
+# Esp8266 Bootup Sequence
+## 1. Giới thiệu
 
 Trong vài viết [Esp8266 Partition Table](flash_map.md), mình đã giới thiệu về bảng partition table và thông tin cơ bản ROM, RAM và Flash của SoC Esp8266. Trong bài viết này mình sẽ bắt đầu giới thiệu về cách thức boot up của SoC Esp8266.
 
@@ -21,7 +22,7 @@ Có 2 thông tin ở bài [Esp8266 Partition Table](flash_map.md) sẽ làm ti�
 
 Để trả lời cho câu hỏi tại tao không ghi bảng phân vùng ở một địa chỉ nào khác mà phải là 0x8000 trên external flask thì mình cần phải dẫn dắt khá dài và sâu về thiết kế của SoC, nếu bạn chỉ quan tâm về tầng ứng dụng thì có thể chuyển qua tìm đọc các bài viết khác, tránh mất thời gian mà còn dễ tẩu hỏa !!
 
-# Ôn lại một chút về CPU
+## 2. Ôn lại một chút về CPU
 
 CPU (central processing unit), với cái tên `bộ xử lý` nghe rất chung chung không biết là nó xử lý cái gì.
 
@@ -39,9 +40,9 @@ Vậy thì khi thiết kế CPU, ngay sau khi CPU thoát ra khỏi sự kiện P
 
 Và mỗi hãng sản xuất CPU cũng chọn cho riêng mình một địa chỉ, chi tiết coi ở đây nè [https://en.wikipedia.org/wiki/Reset_vector](https://en.wikipedia.org/wiki/Reset_vector#:~:text=The%20reset%20vector%20is%20a,the%20system%20containing%20the%20CPU.)
 
-# Quay lại với ESP8266
+## 3. Quay lại với ESP8266
 
-## Mối liên hệ giữa CPU và ROM
+### 3.1 Mối liên hệ giữa CPU và ROM
 
 Với dẫn dắt ở trên bạn sẽ dễ dàng đón nhận với thông tin mình cung cấp bên dưới:
 
@@ -55,7 +56,7 @@ Nó nè:
 
 Nhiều quá, để mình chạy đi kiếm cái bảng Address map của nó. Không thấy document nào nói, nhưng trong SDK của nó thì có thông tin đây.
 
-```
+```js
 File: ESP8266_RTOS_SDK/components/esp8266/ld/esp8266.rom.ld
 --------------------------------------------------
 Vài thông tin cơ bản:
@@ -90,15 +91,15 @@ PROVIDE ( rom_i2c_writeReg_Mask = 0x4000730c );
 
 PROVIDE ( rom_software_reboot = 0x40000080 );
 ```
-## First Stage Bootloader
+### 3.2 First Stage Bootloader
 
-Như vậy ta đã biết sau khi được cấp nguồn, CPU sẽ đi lấy instruction lại địa chỉ rom_software_reboot = 0x40000080, đây là địa chỉ vật lý của chip ROM trên bus.
+Như vậy ta đã biết sau khi được cấp nguồn, CPU sẽ đi lấy instruction lại địa chỉ `rom_software_reboot = 0x40000080`, đây là địa chỉ vật lý của chip ROM trên bus.
 
 Mã thực thi nằm trên ROM này do Espressif nạp sẵn từ trước, cung cấp cho chúng ta hai chức năng chính:
 
 - Khởi tạo UART và cung cấp APIs cho user tương tác với SoC, các lệnh hiện tại mà ROM hỗ trợ:
 
-```,
+```js
 File: ESP8266_RTOS_SDK/components/esptool_py/esptool/esptool.py
 
 esptool.py v2.4.0
@@ -128,13 +129,13 @@ usage: esptool [-h] [--chip {auto,esp8266,esp32}] [--port PORT] [--baud BAUD] [-
 ```
 - Chức năng thứ hai là đi load Second stage bootloader vào SRAM và thực thi.
 
-## Second Stage Bootloader
+### 3.3 Second Stage Bootloader
 
-## Second Stage Bootloader là gì ?
+#### 3.3.1 Second Stage Bootloader là gì ?
 
 Second Stage bootloader cũng là mã thực thi để  yêu cầu CPU thực hiện các công việc mà chúng ta mong muốn, chức năng của nó cũng tương tự như First Stage Bootloader
 
-## Tại sao lại cần Second Stage Bootloader?
+#### 3.3.2 Tại sao lại cần Second Stage Bootloader?
 
 Đích đến cuối cùng của chúng ta là CPU phải load được mã thực thi của ứng dụng mà chúng ta viết (ví dụ 1 web client, mqtt client, socket, LED, LCD ...), cách nhanh nhất là dùng một chip ROM có hỗ trợ ghi/xóa, và nạp thẳng mã thực thi của ứng dụng vào đây, CPU boot lên là chạy ngay ứng dụng của chúng ta luôn.
 
@@ -146,7 +147,7 @@ Cách trên rất tốn kém vì ROM đã mắc, hỗ trợ ghi xóa càng mắc
 - Một chức năng quan trọng của uboot là thực hiện copy file thực thi vào một địa chỉ nào đó trên RAM, yêu cầu CPU đi đến địa chỉ đó mà đọc instruction, đến đây uboot kết thúc sứ mệnh thiêng liêng của mình.
 - File thực thi lấy ở đâu thì nhờ vào code của uboot, lấy từ eMMC, Flash, USB, Ethernet ...
 
-### Tại sao lại cần Second Stage Bootloader trên ESP8266?
+#### 3.3.3 Tại sao lại cần Second Stage Bootloader trên ESP8266?
 
 ESP8266 không có nhiều ngoại vi cần thay đổi, đặc điểm duy nhất mà nó có thể tận dụng là khả năng load file thực thi vào RAM và trao quyền thực thi CPU đến địa chỉ vừa load.
 
@@ -154,7 +155,7 @@ Sử dụng tính năng này ta có thể phát triển tính năng firmware upd
 
 > Đến đây mình đã trả lời được câu hỏi tại sao cần có partition table ở trên. Ví dụ trong trường hợp có dùng OTA
 
-#### ESP8266 OTA Partition Table
+ESP8266 OTA Partition Table
 
 | Name      | Type  | SubType | Offset   | Size    |
 | ----------|-----  |---------|----------|---------|
@@ -166,7 +167,7 @@ Sử dụng tính năng này ta có thể phát triển tính năng firmware upd
 
 - Quá rõ ràng, Second Stage Bootloader khi được thực thi sẽ yêu cầu CPU đến địa chỉ của `otadata (0xd000)` đọc xem user đang muốn load file thực thi ở đâu, chỉ có 2 chỗ (`ota_0` và `ota_1`), load vào RAM (địa chỉ bắt đầu và size đã như tấm thiệp mời trên bàn) sau đó yêu cầu CPU chạy instruction từ địa chỉ vừa load. Nhá hàng cho các bạn thấy log nó nè.
 
-```,
+```js
 ets Jan  8 2013,rst cause:2, boot mode:(3,6)
 
 <span style="color:blue">load 0x40100000, len 7044, room 16 </span>
@@ -202,7 +203,11 @@ I (226) boot: Loaded app from partition at offset 0x10000
 Hello world!
 ```
 
-## Secondary được thực thi như thế nào trên ESP8266?
+#### 3.3.4 Second Stage Bootloader được lưu ở đâu trên flash ?
+
+
+
+### 3.4 Secondary được thực thi như thế nào trên ESP8266?
 
 Ở những phần trên mình giới thiệu cách thức CPU load First Stage Bootloader và Second Stage Bootloader load user application.
 
@@ -212,7 +217,7 @@ Bây giờ mình sẽ đi xóa hoàn toàn bộ nhớ flash để xem ESP8266 n�
 
 Từ serial console của ROM code:
 
-```,
+```js
  ets Jan  8 2013,rst cause:2, boot mode:(3,7)
 
 ets_main.c
@@ -220,7 +225,7 @@ ets_main.c
 
 So sánh với trường hợp chạy thành công:
 
-```,
+```js
 ets Jan  8 2013,rst cause:2, boot mode:(3,6)
 
 <span style="color:blue">load 0x40100000, len 7044, room 16 </span>
@@ -235,8 +240,47 @@ chksum 0x8f
 csum 0x8f
 ```
 Theo kinh nghiệm với các embedded khác, thì việc chọn boot từ đâu có hai khả năng:
-1. ROM code tự động lần lượt quét qua các interface mà SoC đang có.
+1. ROM code tự động lần lượt tìm kiếm trên các interface mà SoC đang có.
 2. ROM code sẽ đọc các chân config trên SoC để biết user đang muốn chủ động boot từ đâu. Ví dụ SoC có hỗ trợ eMMC, SD Card, SSD, USB, thì ROM code sẽ chủ động đi tìm code đúng theo cấu hình của user.
 
 ví dụ trên board iMX8MQ
+
+![](../../../assets/images/imx8mq/imx8mq_boot_mode.png)
+
+ESP8266 sủ dụng GPIO pin để config boot mode, chi tiết xem ở đây [Esp8266 Boot mode selection](https://docs.espressif.com/projects/esptool/en/latest/esp8266/advanced-topics/boot-mode-selection.html)
+
+| GPIO15 | GPIO0 | GPIO2 | Mode   | Description |
+| -------|------ |-------|--------|-------------|
+| L      | L     | H     | UART   | Download code from UART  |
+| L      | H     | H     | Flash  | Boot from SPI Flash   |
+| H      | X     | X     | SDIO   | Boot from SD-card   |
+
+Esp8266 có in ra bootmode `boot mode:(3,6)`, ý nghĩa của nó như sau:
+
+>boot mode:(3,6) ==> boot mode:(m,n)
+
+- Giá trị của m
+
+|  m | GPIO15 | GPIO0 | GPIO2   | Mode |
+| -------|------ |-------|--------|-------------|
+| 1      | 0     | 0     | 1      | UART  |
+| 3      | 0     | 1     | 1      | Flash   |
+| 4,5,6,7| 1     | X     | x      | SDIO   |
+
+- Giá trị của n: [trang chủ của Espressif](https://docs.espressif.com/projects/esptool/en/latest/esp8266/advanced-topics/boot-mode-selection.html) không đề cập đến giá trị này, mình chỉ tìm được [thông tin](https://riktronics.wordpress.com/2017/10/02/esp8266-error-messages-and-exceptions-explained/) như sau
+
+| n | SD_sel != 3 | SD_sel == 3 |
+| -------|------ |-------|
+| 6      | SDIO LowSpeed V1 IO     | UART1 booting     |
+| 7      | SDIO HighSpeed V2 IO     | UART1 booting |
+
+
+
+
+## 4. Tổng kết
+
+Qua hai bài biết [Esp8266 Partition Table](flash_map.md) và [Esp8266 boot-up sequence](esp8266_boot_up.md) mình đã giới thiệu bảng phân vùng, tại sao lại cần có nó, first stage bootloader, second stage bootloader, user application, boot configuration và mối liên hệ giữa chúng.
+
+Ngoài ra mình cũng giới thiệu boot sequence của ESP8266, nắm được những thông tin này sẽ giúp bạn dễ dàng gỡ lỗi trong quá code và phát triển chức năng OTA đúng cách.
+
 
