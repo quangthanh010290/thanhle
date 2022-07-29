@@ -55,7 +55,7 @@ Espressif sử dụng bảng phân vùng (partition tables) để thiết lập 
 - Table bên dưới mô tả một ví dụ một partition table được dùng
 
 | Name     | Type | SubType | Offset   | Size | Flags |
-| ---------|----- |---------|----------|------|-------|
+|:---------|:---- |:--------|:---------|:-----|:------|
 | nvs      | data | nvs     | 0x9000   | 16K  | none  |
 | otadata  | data | ota     | 0xd000   | 8K   | none  |
 | phy_init | data | phy     | 0xf000   | 4K   | none  |
@@ -73,7 +73,7 @@ Espressif sử dụng bảng phân vùng (partition tables) để thiết lập 
 #### ESP8266 Non-OTA Partition Table
 
 | Name      | Type  | SubType | Offset   | Size    |
-| ----------|-----  |---------|----------|---------|
+|:----------|:----  |:--------|:---------|:--------|
 |nvs     | data| nvs    | 0x9000 | 0x6000 |
 |phy_init| data| phy    | 0xf000 | 0x1000|
 |factory | app | factory| 0x10000| 0xF0000|
@@ -84,7 +84,7 @@ Espressif sử dụng bảng phân vùng (partition tables) để thiết lập 
 #### ESP8266 OTA Partition Table
 
 | Name      | Type  | SubType | Offset   | Size    |
-| ----------|-----  |---------|----------|---------|
+|:----------|:------|:--------|:---------|:--------|
 |nvs        |data   | nvs     | 0x9000   | 0x4000  |
 |otadata    |data   | ota     | 0xd000   | 0x2000  |
 |phy_init   |data   | phy     | 0xf000   | 0x1000  |
