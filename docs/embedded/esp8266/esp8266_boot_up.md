@@ -158,7 +158,7 @@ Sử dụng tính năng này ta có thể phát triển tính năng firmware upd
 ESP8266 OTA Partition Table
 
 | Name      | Type  | SubType | Offset   | Size    |
-| ----------|-----  |---------|----------|---------|
+|:----------|:----- |:--------|:---------|:--------|
 |nvs        |data   | nvs     | 0x9000   | 0x4000  |
 |otadata    |data   | ota     | 0xd000   | 0x2000  |
 |phy_init   |data   | phy     | 0xf000   | 0x1000  |
@@ -250,7 +250,7 @@ ví dụ trên board iMX8MQ
 ESP8266 sủ dụng GPIO pin để config boot mode, chi tiết xem ở đây [Esp8266 Boot mode selection](https://docs.espressif.com/projects/esptool/en/latest/esp8266/advanced-topics/boot-mode-selection.html)
 
 | GPIO15 | GPIO0 | GPIO2 | Mode   | Description |
-| -------|------ |-------|--------|-------------|
+|:-------|:----- |:------|:-------|:------------|
 | L      | L     | H     | UART   | Download code from UART  |
 | L      | H     | H     | Flash  | Boot from SPI Flash   |
 | H      | X     | X     | SDIO   | Boot from SD-card   |
@@ -261,18 +261,18 @@ Esp8266 có in ra bootmode `boot mode:(3,6)`, ý nghĩa của nó như sau:
 
 - Giá trị của m
 
-|  m | GPIO15 | GPIO0 | GPIO2   | Mode |
-| -------|------ |-------|--------|-------------|
-| 1      | 0     | 0     | 1      | UART  |
-| 3      | 0     | 1     | 1      | Flash   |
-| 4,5,6,7| 1     | X     | x      | SDIO   |
+|m      | GPIO15 | GPIO0 | GPIO2 | Mode |
+|:------|:-------|:------|:------|:-----|
+|1      |0       |0      |1      |UART  |
+|3      |0       |1      |1      |Flash |
+|4,5,6,7|1       |X      |x      |SDIO  |
 
 - Giá trị của n: [trang chủ của Espressif](https://docs.espressif.com/projects/esptool/en/latest/esp8266/advanced-topics/boot-mode-selection.html) không đề cập đến giá trị này, mình chỉ tìm được [thông tin](https://riktronics.wordpress.com/2017/10/02/esp8266-error-messages-and-exceptions-explained/) như sau
 
-| n | SD_sel != 3 | SD_sel == 3 |
-| -------|------ |-------|
-| 6      | SDIO LowSpeed V1 IO     | UART1 booting     |
-| 7      | SDIO HighSpeed V2 IO     | UART1 booting |
+| n | SD_sel != 3         | SD_sel == 3   |
+|:--|:--------------------|:--------------|
+| 6 |SDIO LowSpeed V1 IO  | UART1 booting |
+| 7 |SDIO HighSpeed V2 IO | UART1 booting |
 
 
 
