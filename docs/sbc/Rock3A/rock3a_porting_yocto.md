@@ -3,7 +3,7 @@ layout: default
 title: Rock3A::Yocto Porting
 nav_order: 1
 has_children: true
-permalink: docs/sbc/add_yocto_support
+permalink: docs/sbc/rock3a_porting_yocto
 parent: Single Board Computer(SBC)
 ---
 
